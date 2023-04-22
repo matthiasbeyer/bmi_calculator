@@ -5,14 +5,14 @@ struct Weight(f64);
 
 struct Height(f64);
 
-struct BMI {
+struct BodyMassIndex {
     value: f64,
 }
 
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
-fn calculate_bmi(weight: Weight, height: Height) -> BMI {
+fn calculate_bmi(weight: Weight, height: Height) -> BodyMassIndex {
     let bmi = weight.0 / (height.0 * height.0);
-    BMI { value: bmi }
+    BodyMassIndex { value: bmi }
 }
 
 fn main() {
