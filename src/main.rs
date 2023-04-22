@@ -20,6 +20,8 @@ fn main() {
     print!("Gebe dein Gewicht in kg ein: ");
     let _ = std::io::stdout().flush();
 
+    let = 
+
     // TODO Error handling:
     let mut buffer = String::new();
     stdin.read_line(&mut buffer).unwrap();
