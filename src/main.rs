@@ -5,14 +5,14 @@ struct Weight(f64);
 
 struct Height(f64);
 
-struct BMI {
+struct BodyMassIndex {
     value: f64,
 }
 
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
-fn calculate_bmi(weight: Weight, height: Height) -> BMI {
+fn calculate_bmi(weight: Weight, height: Height) -> BodyMassIndex {
     let bmi = weight.0 / (height.0 * height.0);
-    BMI { value: bmi }
+    BodyMassIndex { value: bmi }
 }
 
 fn main() {
@@ -23,7 +23,7 @@ fn main() {
     // TODO Error handling:
     let mut buffer = String::new();
     stdin.read_line(&mut buffer).unwrap();
-    println!(""); // newline
+    println!(); // newline
 
     // TODO Error handling:
     let weight = Weight(f64::from_str(buffer.trim()).unwrap());
@@ -35,7 +35,7 @@ fn main() {
     let mut buffer_height = String::new();
     // TODO Error handling:
     stdin.read_line(&mut buffer_height).unwrap();
-    println!(""); // newline
+    println!(); // newline
 
     // TODO Error handling:
     let height = Height(f64::from_str(buffer_height.trim()).unwrap());
