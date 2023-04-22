@@ -42,3 +42,14 @@ jobs:
         with:
           command: clippy
           args: -- -D warnings
+
+  ci:
+    name: CI
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    needs:
+      - clippy
+      - fmt
+      - check
+    steps:
+      - run: exit 0
