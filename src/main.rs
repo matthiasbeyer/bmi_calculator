@@ -1,9 +1,18 @@
 use std::str::FromStr;
 use std::io::Write;
 
+struct Weight(f64);
+
+struct Height(f64);
+
+struct BMI {
+    value: f64
+}
+
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
-fn calculate_bmi(weight: f64, height: f64) -> f64 {
-    weight / (height * height)
+fn calculate_bmi(weight: Weight, height: Height) -> BMI {
+    let bmi = weight.0 / (height.0 * height.0);
+    BMI { value: bmi }
 }
 
 fn main() {
@@ -17,8 +26,8 @@ fn main() {
     println!(""); // newline
 
     // TODO Error handling:
-    let weight = f64::from_str(buffer.trim()).unwrap();
-    println!("Weight: {weight}");
+    let weight = Weight(f64::from_str(buffer.trim()).unwrap());
+    println!("Weight: {}", weight.0);
 
 
     print!("Gebe deine Größe in Meter ein: ");
@@ -30,9 +39,9 @@ fn main() {
     println!(""); // newline
 
     // TODO Error handling:
-    let height = f64::from_str(buffer_height.trim()).unwrap();
-    println!("Weight: {height}");
+    let height = Height(f64::from_str(buffer_height.trim()).unwrap());
+    println!("Weight: {}", height.0);
 
     let bmi = calculate_bmi(weight, height);
-    println!("BMI: {bmi}");
+    println!("BMI: {}", bmi.value);
 }
