@@ -1,12 +1,12 @@
-use std::str::FromStr;
 use std::io::Write;
+use std::str::FromStr;
 
 struct Weight(f64);
 
 struct Height(f64);
 
 struct BMI {
-    value: f64
+    value: f64,
 }
 
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
@@ -28,7 +28,6 @@ fn main() {
     // TODO Error handling:
     let weight = Weight(f64::from_str(buffer.trim()).unwrap());
     println!("Weight: {}", weight.0);
-
 
     print!("Gebe deine Größe in Meter ein: ");
     let _ = std::io::stdout().flush();
