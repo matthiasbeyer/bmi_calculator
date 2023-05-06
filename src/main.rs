@@ -15,6 +15,18 @@ fn calculate_bmi(weight: Weight, height: Height) -> BodyMassIndex {
     BodyMassIndex { value: bmi }
 }
 
+#[test]
+fn test_calculate_bmi() {
+    let result = calculate_bmi(Weight(69.0), Height(1.69));
+    assert_eq!(result.value, 24.158817968558527);
+}
+
+#[test]
+fn test_calculate_bmi_broken() {
+    let result = calculate_bmi(Weight(69.0), Height(-0.0));
+    assert_eq!(result.value, std::f64::INFINITY);
+}
+
 fn main() {
     let stdin = std::io::stdin();
     print!("Gebe dein Gewicht in kg ein: ");
