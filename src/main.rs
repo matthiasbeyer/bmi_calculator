@@ -1,9 +1,7 @@
-use std::io::Write;
-use std::str::FromStr;
-
 use bmi::BodyMassIndex;
 use error::BmiError;
 use height::Height;
+use inquire::CustomType;
 use weight::Weight;
 
 mod bmi;
@@ -27,29 +25,26 @@ pub fn calculate_bmi(weight: Weight, height: Height) -> Result<BodyMassIndex, Bm
 }
 
 fn main() {
-    let stdin = std::io::stdin();
-    print!("Gebe dein Gewicht in kg ein: ");
-    let _ = std::io::stdout().flush();
+    env_logger::init();
 
-    // TODO Error handling:
-    let mut buffer = String::new();
-    stdin.read_line(&mut buffer).unwrap();
-    println!(); // newline
+    log::info!("Program started!");
 
-    // TODO Error handling:
-    let weight = Weight(f64::from_str(buffer.trim()).unwrap());
-    println!("Weight: {}", weight.0);
+    let weight = CustomType::<f64>::new("Gebe dein Gewicht in KG ein")
+        .with_formatter(&|i| format!("${:.2}", i))
+        .with_error_message("Please type a valid number")
+        .with_help_message("Type the amount in Kilograms using a decimal point as a separator")
+        .prompt();
 
-    print!("Gebe deine Größe in Meter ein: ");
-    let _ = std::io::stdout().flush();
+    let weight = Weight(weight.unwrap());
+    log::debug!("Weight: {}", weight.0);
 
-    let mut buffer_height = String::new();
-    // TODO Error handling:
-    stdin.read_line(&mut buffer_height).unwrap();
-    println!(); // newline
+    let height = CustomType::<f64>::new("Gebe deine Größe in Meter ein")
+        .with_formatter(&|i| format!("${:.2}", i))
+        .with_error_message("Please type a valid number")
+        .with_help_message("Type your height in meters")
+        .prompt();
 
-    // TODO Error handling:
-    let height = Height(f64::from_str(buffer_height.trim()).unwrap());
+    let height = Height(height.unwrap());
     println!("Weight: {}", height.0);
 
     let bmi = calculate_bmi(weight, height);
