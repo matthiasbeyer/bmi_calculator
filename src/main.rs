@@ -33,18 +33,26 @@ fn main() {
         .with_formatter(&|i| format!("${:.2}", i))
         .with_error_message("Please type a valid number")
         .with_help_message("Type the amount in Kilograms using a decimal point as a separator")
-        .prompt();
+        .prompt()
+        .map(Weight)
+        .unwrap_or_else(|e| {
+            eprintln!("Failed to read weigth: {e:?}");
+            std::process::exit(1)
+        });
 
-    let weight = Weight(weight.unwrap());
     log::debug!("Weight: {}", weight.0);
 
     let height = CustomType::<f64>::new("Gebe deine Größe in Meter ein")
         .with_formatter(&|i| format!("${:.2}", i))
         .with_error_message("Please type a valid number")
         .with_help_message("Type your height in meters")
-        .prompt();
+        .prompt()
+        .map(Height)
+        .unwrap_or_else(|e| {
+            eprintln!("Failed to read heigth: {e:?}");
+            std::process::exit(1)
+        });
 
-    let height = Height(height.unwrap());
     println!("Weight: {}", height.0);
 
     let bmi = calculate_bmi(weight, height);
