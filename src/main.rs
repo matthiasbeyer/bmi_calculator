@@ -64,11 +64,21 @@ fn main() {
             println!("BMI: {}", value);
 
             // Alternativ: std::io::File::create("database.txt");
-            let mut file = std::fs::File::options()
+            let mut file = match std::fs::File::options()
                 .create(true)
                 .append(true)
                 .open("database.txt")
-                .unwrap();
+            {
+                Ok(file) => {
+                    log::debug!("Created/opened file!");
+                    file
+                }
+                Err(e) => {
+                    log::error!("Creating/Opening file failed: {e:?}");
+                    std::process::exit(1)
+                }
+            };
+
             writeln!(&mut file, "{}", bmi.value()).unwrap();
         }
         Err(e) => println!("Error while calculating: {e:?}"),
