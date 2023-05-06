@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use bmi::BodyMassIndex;
 use error::BmiError;
 use height::Height;
@@ -60,6 +62,14 @@ fn main() {
         Ok(bmi) => {
             let value = BodyMassIndex::value(&bmi);
             println!("BMI: {}", value);
+
+            // Alternativ: std::io::File::create("database.txt");
+            let mut file = std::fs::File::options()
+                .create(true)
+                .append(true)
+                .open("database.txt")
+                .unwrap();
+            writeln!(&mut file, "{}", bmi.value()).unwrap();
         }
         Err(e) => println!("Error while calculating: {e:?}"),
     }
