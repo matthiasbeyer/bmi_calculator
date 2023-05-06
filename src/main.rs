@@ -9,13 +9,18 @@ struct BodyMassIndex {
     value: f64,
 }
 
+#[derive(Debug)]
+enum BmiError {
+    HeightCannotBeZeroOrSmaller,
+}
+
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
-fn calculate_bmi(weight: Weight, height: Height) -> Option<BodyMassIndex> {
+fn calculate_bmi(weight: Weight, height: Height) -> Result<BodyMassIndex, BmiError> {
     if height.0 <= 0.0 {
-        return None;
+        return Err(BmiError::HeightCannotBeZeroOrSmaller);
     }
     let bmi = weight.0 / (height.0 * height.0);
-    Some(BodyMassIndex { value: bmi })
+    Ok(BodyMassIndex { value: bmi })
 }
 
 #[test]
@@ -27,7 +32,7 @@ fn test_calculate_bmi() {
 #[test]
 fn test_calculate_bmi_broken() {
     let opt = calculate_bmi(Weight(69.0), Height(-0.0));
-    assert!(opt.is_none());
+    assert!(opt.is_err());
 }
 
 fn main() {
@@ -58,7 +63,7 @@ fn main() {
 
     let bmi = calculate_bmi(weight, height);
     match bmi {
-        Some(bmi) => println!("BMI: {}", bmi.value),
-        None => println!("Cannot use negative height"),
+        Ok(bmi) => println!("BMI: {}", bmi.value),
+        Err(e) => println!("Error while calculating: {e:?}"),
     }
 }
