@@ -35,6 +35,12 @@ fn test_calculate_bmi_broken() {
     assert!(opt.is_err());
 }
 
+#[test]
+fn test_calculate_bmi_broken_weigth() {
+    let res = calculate_bmi(Weight(-0.0), Height(172.0));
+    assert!(res.is_err());
+}
+
 fn main() {
     let stdin = std::io::stdin();
     print!("Gebe dein Gewicht in kg ein: ");
