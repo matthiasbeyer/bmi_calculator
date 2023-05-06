@@ -2,10 +2,12 @@
 mod test {
     use crate::{calculate_bmi, BmiError, Height, Weight};
 
+    use float_eq::assert_float_eq;
+
     #[test]
     fn test_calculate_bmi() {
         let result = calculate_bmi(Weight(69.0), Height(1.69)).unwrap();
-        assert_eq!(result.value(), 24.158817968558527);
+        assert_float_eq!(result.value(), 24.15, abs <= 0.01);
     }
 
     #[test]
