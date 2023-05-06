@@ -5,7 +5,7 @@ mod test {
     #[test]
     fn test_calculate_bmi() {
         let result = calculate_bmi(Weight(69.0), Height(1.69)).unwrap();
-        assert_eq!(result.value, 24.158817968558527);
+        assert_eq!(result.value(), 24.158817968558527);
     }
 
     #[test]

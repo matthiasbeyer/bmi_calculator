@@ -1,22 +1,16 @@
 use std::io::Write;
 use std::str::FromStr;
 
+use bmi::BodyMassIndex;
+use error::BmiError;
+use height::Height;
+use weight::Weight;
+
+mod bmi;
+mod error;
+mod height;
 mod tests;
-
-pub struct Weight(f64);
-
-pub struct Height(f64);
-
-#[derive(Debug)]
-pub struct BodyMassIndex {
-    value: f64,
-}
-
-#[derive(Debug, PartialEq)]
-pub enum BmiError {
-    HeightCannotBeZeroOrSmaller,
-    WeightCannotBeZeroOrSmaller,
-}
+mod weight;
 
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
 pub fn calculate_bmi(weight: Weight, height: Height) -> Result<BodyMassIndex, BmiError> {
@@ -29,7 +23,7 @@ pub fn calculate_bmi(weight: Weight, height: Height) -> Result<BodyMassIndex, Bm
     }
 
     let bmi = weight.0 / (height.0 * height.0);
-    Ok(BodyMassIndex { value: bmi })
+    Ok(BodyMassIndex::new(bmi))
 }
 
 fn main() {
@@ -60,7 +54,10 @@ fn main() {
 
     let bmi = calculate_bmi(weight, height);
     match bmi {
-        Ok(bmi) => println!("BMI: {}", bmi.value),
+        Ok(bmi) => {
+            let value = BodyMassIndex::value(&bmi);
+            println!("BMI: {}", value);
+        }
         Err(e) => println!("Error while calculating: {e:?}"),
     }
 }
