@@ -12,6 +12,7 @@ struct BodyMassIndex {
 #[derive(Debug)]
 enum BmiError {
     HeightCannotBeZeroOrSmaller,
+    WeightCannotBeZeroOrSmaller,
 }
 
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
@@ -19,6 +20,11 @@ fn calculate_bmi(weight: Weight, height: Height) -> Result<BodyMassIndex, BmiErr
     if height.0 <= 0.0 {
         return Err(BmiError::HeightCannotBeZeroOrSmaller);
     }
+
+    if weight.0 <= 0.0 {
+        return Err(BmiError::WeightCannotBeZeroOrSmaller);
+    }
+
     let bmi = weight.0 / (height.0 * height.0);
     Ok(BodyMassIndex { value: bmi })
 }
