@@ -1,5 +1,3 @@
-use std::io::Write;
-
 use bmi::BodyMassIndex;
 use error::BmiError;
 use height::Height;
@@ -7,6 +5,7 @@ use inquire::CustomType;
 use weight::Weight;
 
 mod bmi;
+mod db;
 mod error;
 mod height;
 mod tests;
@@ -63,23 +62,11 @@ fn main() {
             let value = BodyMassIndex::value(&bmi);
             println!("BMI: {}", value);
 
-            // Alternativ: std::io::File::create("database.txt");
-            let mut file = match std::fs::File::options()
-                .create(true)
-                .append(true)
-                .open("database.txt")
-            {
-                Ok(file) => {
-                    log::debug!("Created/opened file!");
-                    file
-                }
-                Err(e) => {
-                    log::error!("Creating/Opening file failed: {e:?}");
-                    std::process::exit(1)
-                }
-            };
+            let entry = db::DatabaseEntry::new(bmi).expect("Creating database entry object");
+            let mut database = crate::db::Database::load().expect("Opening database");
 
-            writeln!(&mut file, "{}", bmi.value()).unwrap();
+            database.add_entry(entry);
+            database.store().expect("Storing database");
         }
         Err(e) => println!("Error while calculating: {e:?}"),
     }
