@@ -1,4 +1,4 @@
-use std::io::{Read, Write};
+use std::io::Write;
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct DatabaseEntry {
@@ -24,20 +24,9 @@ pub struct Database(Vec<DatabaseEntry>);
 
 impl Database {
     pub fn load() -> Result<Self, DatabaseError> {
-        std::fs::OpenOptions::new()
-            .read(true)
-            .create(true)
-            .write(false)
-            .open("./database.json")
-            .map_err(DatabaseError::from)
-            .and_then(|mut file| {
-                let mut buffer = String::new();
-                let _ = file
-                    .read_to_string(&mut buffer)
-                    .map_err(DatabaseError::from)?;
-                let database = serde_json::from_str(&buffer).map_err(DatabaseError::from)?;
-                Ok(database)
-            })
+        let database_str = std::fs::read_to_string("database.json")?;
+        let database = serde_json::from_str(&database_str).map_err(DatabaseError::from)?;
+        Ok(database)
     }
 
     pub fn add_entry(&mut self, entry: DatabaseEntry) {
@@ -51,9 +40,15 @@ impl Database {
             .read(true)
             .create(true)
             .write(true)
-            .open("./database.json")
+            .open("database.json")
             .map_err(DatabaseError::from)
             .and_then(|mut file| file.write_all(&bytes).map_err(DatabaseError::from))
+    }
+
+    pub fn print(&self) {
+        for entry in &self.0 {
+            println!("{}: {}", entry.timestamp, entry.bmi.value());
+        }
     }
 }
 
