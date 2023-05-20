@@ -1,3 +1,7 @@
+use axum::{
+    routing::{get, post},
+    Router, Server,
+};
 use bmi::BodyMassIndex;
 use clap::Parser;
 use error::BmiError;
@@ -10,12 +14,16 @@ mod db;
 mod error;
 mod height;
 mod tests;
+mod web;
 mod weight;
 
 #[derive(clap::Parser)]
 struct Args {
     #[clap(short, long)]
     database: bool,
+
+    #[clap(short, long)]
+    webui: bool,
 }
 
 // TODO: Eigene Datentypen für Eingabe und Ausgabe
@@ -32,7 +40,8 @@ pub fn calculate_bmi(weight: Weight, height: Height) -> Result<BodyMassIndex, Bm
     Ok(BodyMassIndex::new(bmi))
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     env_logger::init();
     log::info!("Program started!");
 
@@ -41,6 +50,23 @@ fn main() {
         println!("Printing database");
         let database = crate::db::Database::load().expect("Opening database");
         database.print();
+        return;
+    } else if cli.webui {
+        println!("Starting webserver");
+        let addr = "127.0.0.1:8123".parse().unwrap();
+        let database = crate::db::Database::load().expect("Opening database");
+        let database = std::sync::Arc::new(tokio::sync::RwLock::new(database));
+        let router = Router::new()
+            .route("/", get(web::index))
+            .route("/new", get(web::new_entry))
+            .route("/submit", post(web::submit_new_entry))
+            .with_state(database);
+
+        Server::bind(&addr)
+            .serve(router.into_make_service())
+            .await
+            .unwrap();
+
         return;
     } else {
         println!("Interactive now...");
