@@ -9,13 +9,21 @@ pub struct DatabaseEntry {
 impl DatabaseEntry {
     pub fn new(bmi: crate::bmi::BodyMassIndex) -> Result<Self, DatabaseError> {
         let timestamp = {
-            let now = time::OffsetDateTime::now_local().map_err(DatabaseError::from)?;
+            let now = time::OffsetDateTime::now_utc();
             let date = now.date();
             let time = now.time();
             time::PrimitiveDateTime::new(date, time)
         };
 
         Ok(Self { bmi, timestamp })
+    }
+
+    pub fn timestamp(&self) -> time::PrimitiveDateTime {
+        self.timestamp
+    }
+
+    pub fn bmi(&self) -> &crate::bmi::BodyMassIndex {
+        &self.bmi
     }
 }
 
@@ -33,7 +41,7 @@ impl Database {
         self.0.push(entry);
     }
 
-    pub fn store(self) -> Result<(), DatabaseError> {
+    pub fn store(&self) -> Result<(), DatabaseError> {
         let bytes = serde_json::to_vec_pretty(&self)?;
 
         std::fs::OpenOptions::new()
@@ -49,6 +57,10 @@ impl Database {
         for entry in &self.0 {
             println!("{}: {}", entry.timestamp, entry.bmi.value());
         }
+    }
+
+    pub fn entry_iter(&self) -> impl Iterator<Item = &DatabaseEntry> {
+        self.0.iter()
     }
 }
 
