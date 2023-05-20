@@ -17,6 +17,14 @@ impl DatabaseEntry {
 
         Ok(Self { bmi, timestamp })
     }
+
+    pub fn timestamp(&self) -> time::PrimitiveDateTime {
+        self.timestamp
+    }
+
+    pub fn bmi(&self) -> &crate::bmi::BodyMassIndex {
+        &self.bmi
+    }
 }
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
