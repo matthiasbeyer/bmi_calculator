@@ -41,7 +41,7 @@ impl Database {
         self.0.push(entry);
     }
 
-    pub fn store(self) -> Result<(), DatabaseError> {
+    pub fn store(&self) -> Result<(), DatabaseError> {
         let bytes = serde_json::to_vec_pretty(&self)?;
 
         std::fs::OpenOptions::new()
