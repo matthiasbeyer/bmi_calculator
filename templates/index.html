@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en">
+    <body>
+        <ul>
+            {% for item in entries %}
+                <li>{{ item.timestamp }} - {{ item.bmi }}</li>
+            {% endfor%}
+        </ul>
+    </body>
+</html>
+
