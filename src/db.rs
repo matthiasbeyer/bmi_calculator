@@ -58,6 +58,10 @@ impl Database {
             println!("{}: {}", entry.timestamp, entry.bmi.value());
         }
     }
+
+    pub fn entry_iter(&self) -> impl Iterator<Item = &DatabaseEntry> {
+        self.0.iter()
+    }
 }
 
 #[derive(Debug, thiserror::Error)]
