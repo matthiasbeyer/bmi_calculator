@@ -9,7 +9,7 @@ pub struct DatabaseEntry {
 impl DatabaseEntry {
     pub fn new(bmi: crate::bmi::BodyMassIndex) -> Result<Self, DatabaseError> {
         let timestamp = {
-            let now = time::OffsetDateTime::now_local().map_err(DatabaseError::from)?;
+            let now = time::OffsetDateTime::now_utc();
             let date = now.date();
             let time = now.time();
             time::PrimitiveDateTime::new(date, time)
