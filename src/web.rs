@@ -1,13 +1,7 @@
 use std::sync::Arc;
 
 use askama::Template;
-use axum::{
-    extract::State,
-    http::{Response, StatusCode},
-    response::Html,
-    response::IntoResponse,
-    Form,
-};
+use axum::{extract::State, http::StatusCode, response::Html, response::IntoResponse, Form};
 use tokio::sync::RwLock;
 
 use crate::db::Database;
